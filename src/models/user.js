@@ -52,8 +52,8 @@ const UserSchema = new mongoose.Schema({
     }]
 })
 
-UserSchema.methods.hashPassowrd = function(password){
-    return bcrypt.hashSync(password,bcrypt.genSalt(10),null);
+UserSchema.methods.encryptPassword = function(password){
+    return bcrypt.hashSync(password,10) // here 10 is salt rounds
 }
 
 UserSchema.methods.comparePassword = function(password){

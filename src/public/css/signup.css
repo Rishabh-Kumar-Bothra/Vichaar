@@ -48,3 +48,6 @@ a:hover{
   transition: .3s;
 
 }
+.error{
+  color:red;
+}
