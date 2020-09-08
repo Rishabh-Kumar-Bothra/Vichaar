@@ -28,7 +28,7 @@ route.get('/success',(req,res)=>{
 route.get('/logout',(req, res)=>{
     req.logOut();
     console.log("Logged Out Succefully");
-    res.send(undefined);
+    res.send("logout");
 })
 
 function loggedIn(req,res,next){

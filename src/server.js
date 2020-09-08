@@ -11,11 +11,14 @@ const mongoose  = require("mongoose");
 const login = require("./router/login");
 const signup = require("./router/signup");
 const explore = require("./router/explore");
+const profile = require("./router/profile");
+const user = require("./router/user");
+const post = require("./router/post");
 
 const PORT = process.env.PORT || 3000;
 const mongo_uri = process.env.mongo_uri;
 
-mongoose.connect(mongo_uri,{ useUnifiedTopology: true, useNewUrlParser: true })
+mongoose.connect(mongo_uri,{ useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false })
     .then(()=>{
         console.log("db connection successfull !");
         app.listen(PORT, ()=>{
@@ -28,6 +31,8 @@ mongoose.connect(mongo_uri,{ useUnifiedTopology: true, useNewUrlParser: true })
 
 
 app.use(express.static(path.join(__dirname , 'public')));
+app.engine('html', require('ejs').renderFile);
+app.set('views', path.join(__dirname, '/public/html'));
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -45,6 +50,9 @@ app.use(passport.session());
 app.use("/login",login);
 app.use("/signup",signup);
 app.use("/",explore);
+app.use("/user",user);
+app.use("/post",post);
+app.use("/profile",profile);
 
 
 

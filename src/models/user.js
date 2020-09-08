@@ -17,6 +17,7 @@ const UserSchema = new mongoose.Schema({
     name:{
         type:String,
         required:true,
+        trim:true,
     },
     password:{
         type:String,
@@ -37,7 +38,8 @@ const UserSchema = new mongoose.Schema({
         },
         username:{
             type:String,
-            default:''
+            default:'',
+            trim:true,
         }
     }],
     followings:[{
@@ -47,7 +49,8 @@ const UserSchema = new mongoose.Schema({
         },
         username:{
             type: String,
-            default: ''
+            default: '',
+            trim:true,
         }
     }]
 })

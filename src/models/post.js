@@ -9,6 +9,7 @@ const PostSceham = new mongoose.Schema({
     user:{
         type: String,
         required: true,
+        trim:true,
     },
     title:{
         type:String,
@@ -50,5 +51,5 @@ const PostSceham = new mongoose.Schema({
     }]
 })
 
-const Post = mongoose.Schema.model("Post",PostSceham);
+const Post = mongoose.model("Post",PostSceham);
 module.exports = Post;
