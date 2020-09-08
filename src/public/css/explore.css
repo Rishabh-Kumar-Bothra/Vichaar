@@ -24,3 +24,7 @@ body {
     content: none;
     display: none;
 }
+
+.disable-click{
+    pointer-events:none
+}

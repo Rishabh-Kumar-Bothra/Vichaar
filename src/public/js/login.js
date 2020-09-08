@@ -3,7 +3,7 @@ $(document).ready(()=>{
     console.log("login page loaded !");
 
     $("#login").click(()=>{
-        console.log("button clicked!")
+        // console.log("button clicked!")
         $(".error").empty();
         let username = $("#username").val();
         let password = $("#password").val();
