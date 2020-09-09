@@ -25,6 +25,11 @@ function deletePost(_id){
     })
 }
 
+function makeLists(user){
+    return(`<li class="list-group-item" onclick="window.location.href='/profile/${user}'">${user}</li>
+    `)
+}
+
 function makePosts(user,body,likes,title,id){
     return(`<div class="card gedf-card">
     <div class="card-header">
@@ -100,6 +105,22 @@ $(document).ready(()=>{
         $("#appendHere").append(makePosts(data[x].user,data[x].body,data[x].likes,data[x].title,data[x]._id));
     }
 
+    $("#followers").click(()=>{
+        $("#followerList").empty();
+        $("#followingList").hide();
+        for(let x in userData.user.followers){
+            $("#followerList").append(makeLists(userData.user.followers[x].username));
+        }
+    })
+
+    $("#followings").click(()=>{
+        $("#followingList").hide();
+        $("#followerList").empty();
+        for(let x in userData.user.followings){
+            $("#followingList").append(makeLists(userData.user.followings[x].username));
+        }
+    })
+
     $("#follow").click(()=>{
         $.post("/profile/follow",{
             username: userData.user.username,
@@ -112,7 +133,17 @@ $(document).ready(()=>{
         })
     })
     
-
+    $("#unfollow").click(()=>{
+        $.post("/profile/unfollow",{
+            username: userData.user.username,
+            _id:userData.user._id,
+        },(data)=>{
+            console.log(data);  
+            if(data == "success"){
+                window.location.reload(true);
+            }
+        })
+    })
 
 
 })

@@ -55,19 +55,28 @@ route.delete('/post',loggedIn,(req,res)=>{
     })
 })
 
+
+// follow a user
 route.post('/follow',loggedIn,(req,res)=>{
-    console.log(req.body); // jisko follow kia hai
-    console.log(req.user); // jisne follow kia hai / jo loggedin hai
-    let newDetails = {
-        follwerId: mongoose.Types.ObjectId(req.body._id),
+    // console.log("body follow",req.body._id); // jisko follow kia hai
+    // console.log(req.user); // jisne follow kia hai / jo loggedin hai
+    let newFollowingDetails = {
+        followingId: req.body._id,
         username: req.body.username,
     }
 
+    let newFollowerDetails = {
+        followerId: req.user._id,
+        username: req.user.username,
+    }
+
+    console.log(newFollowingDetails);
+    console.log(newFollowerDetails);
     User.findOneAndUpdate({
         username: req.user.username,
     },{
         $addToSet:{
-            followings:newDetails,
+            followings:newFollowingDetails,
         }
     },{
         new:true,
@@ -83,10 +92,7 @@ route.post('/follow',loggedIn,(req,res)=>{
                 username: req.body.username,
             },{
                 $addToSet:{
-                    followers:{
-                        follwerId: mongoose.Types.ObjectId(req.user._id),
-                        username: req.user.username,
-                    }
+                    followers:newFollowerDetails,
                 }
             },{
                 new:true,
@@ -102,7 +108,63 @@ route.post('/follow',loggedIn,(req,res)=>{
             })
         }
         else{
-            res.send("error");
+            res.render(("error.html"),{err:"some random error"});
+        }
+    })
+})
+
+
+// unfollow a user
+route.post("/unfollow",(req,res)=>{
+    // console.log("user",req.user);// jo loggedin hai / jisme se folwing se hatana hai
+    // console.log("body unfollow ",req.body._id); // iske followers mai se hatan hai 
+    let oldFollowingDetails = {
+        followingId: req.body._id,
+        username: req.body.username,
+    }
+
+    let oldFollowerDetails = {
+        followerId: req.user._id,
+        username: req.user.username,
+    }
+
+    User.findOneAndUpdate({
+        username: req.user.username,
+    },{
+        $pull:{
+            followings:oldFollowingDetails,
+        }
+    },{
+        new:true,
+    }).exec((err,user)=>{
+
+        if(err){
+            console.log("err in unfollowing user",err);
+            return res.render(("error.html"),{err:"err while unfollowing user !"});
+        }
+        if(user){
+            // console.log("unfollowing success:",user);
+            User.findOneAndUpdate({
+                username: req.body.username,
+            },{
+                $pull:{
+                    followers: oldFollowerDetails,
+                }
+            },{
+                new:true,
+            }).exec((err,user)=>{
+                if(err){
+                    console.log("err while removing followers in user",err);
+                    return res.render(("error.html"),{err:"rror while removing followers in user"});
+                }
+                if(user){
+                    // console.log("unfollow success",user);
+                    return res.send("success");
+                }
+            })
+        }
+        else{
+            res.render(("error.html"),{err:"some random error"});
         }
     })
 })

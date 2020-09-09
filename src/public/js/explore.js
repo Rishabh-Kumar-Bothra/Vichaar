@@ -10,6 +10,11 @@ function updateLikes(ele,_id){
     })
 }
 
+function makeLists(user){
+    return(`<li class="list-group-item" onclick="window.location.href='/profile/${user}'">${user}</li>
+    `)
+}
+
 function makePosts(user,body,likes,title,id){
     return(`<div class="card gedf-card">
     <div class="card-header">
@@ -19,7 +24,7 @@ function makePosts(user,body,likes,title,id){
                     <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
                 </div>
                 <div class="ml-2">
-                    <div class="h5 m-0">${user}</div>
+                    <div class="h5 m-0" onclick="window.location.href='/profile/${user}'">${user}</div>
                     <!-- <div class="h7 text-muted">Rishabh Kumar Bothra</div> -->
                 </div>
             </div>
@@ -57,9 +62,11 @@ function makePosts(user,body,likes,title,id){
 }
 $(document).ready(()=>{
     console.log("explore is loaded!");
+    let userData;
 
     $.get("/user/details",(data)=>{
-        // console.log(data.username);
+        console.log(data);
+        userData = data;
         $("#username").text(data.username);
         $("#name").text(data.name);
         $("#followers").text(data.followers.length);
@@ -71,6 +78,27 @@ $(document).ready(()=>{
         for(let x in data){
             $("#appendHere").append(makePosts(data[x].user,data[x].body,data[x].likes,data[x].title,data[x]._id));
             // console.log(data[x].user,data[x].body,data[x].likes);
+        }
+    })
+
+    $("#username").click(()=>{
+        let username = $("#username").text();
+        window.location.href = `/profile/${username}`;
+    })
+
+    $("#followers").click(()=>{
+        $("#followerList").empty();
+        $("#followingList").hide();
+        for(let x in userData.followers){
+            $("#followerList").append(makeLists(userData.followers[x].username));
+        }
+    })
+
+    $("#followings").click(()=>{
+        $("#followingList").hide();
+        $("#followerList").empty();
+        for(let x in userData.followings){
+            $("#followingList").append(makeLists(userData.followings[x].username));
         }
     })
 

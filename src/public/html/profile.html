@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link href="../css/explore.css">
-
+    <style>
+        .h5{
+            cursor: grabbing;
+        }
+    </style>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
@@ -20,7 +24,7 @@
     <script>var userData = <%- JSON.stringify(userData) %></script>
     <script src="../js/profile.js"></script>
 
-    <title>Profile</title>
+    <title><%= userData.user.username %></title>
 </head>
 
 
@@ -53,14 +57,20 @@
                         <div class="card-body">
                             <div class="float-right mr-4 ml-4">
                                 <div class="h6 text-muted">Followers</div>
-                                <div class=" h5" id="followers">300</div>
+                                <div class=" h5"><span id="followers">300</span>
+                                    <ul class="list-group" id="followerList">
+                                    </ul>
+                                </div>
                             </div>
                             <div class="float-right mr-4 ml-4">
                                 <div class="h6 text-muted">Following</div>
-                                <div class="h5" id="followings">300</div>
+                                <div class="h5"><span id="followings">300</span>
+                                    <ul class="list-group" id="followerList">
+                                    </ul>
+                                </div>
                             </div>
                             <div class="float-right">
-                                <div class="h5 " id="username"><%= userData.user.username %></div>
+                                <div class="h5 " id="username"><%= userData.user.name %></div>
                                 <div class="h7">You are not rich until you have something which money can't buy!</div>
                             </div>
                             <div class="mr-2">
