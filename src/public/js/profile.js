@@ -77,17 +77,42 @@ $(document).ready(()=>{
     $("#followings").text(userData.user.followings.length);
 
     // Handling button visibility
-    if(userData.self){
+    if(userData.self.username == userData.user.username){
         $("#follow").hide();
         $("#unfollow").hide();
     }
     else{
         $("#edit").hide();
+        let follow = false;
+
+        for(x in userData.user.followers){
+            if(userData.user.followers[x].username == userData.self.username)
+                follow = true;
+        }
+
+        if(follow)
+            $("#follow").hide();
+        else
+            $("#unfollow").hide();
     }
     let data = userData.post;
     for(x in data){
         $("#appendHere").append(makePosts(data[x].user,data[x].body,data[x].likes,data[x].title,data[x]._id));
     }
+
+    $("#follow").click(()=>{
+        $.post("/profile/follow",{
+            username: userData.user.username,
+            _id: userData.user._id,
+        },(data)=>{
+            console.log(data);
+            if(data == "success"){
+                window.location.reload(true);
+            }
+        })
+    })
+    
+
 
 
 })

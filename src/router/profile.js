@@ -2,14 +2,14 @@ const route = require("express").Router();
 const path = require("path");
 const User = require("../models/user");
 const Post = require("../models/post");
+const mongoose = require("mongoose");
 
 route.get('/:username',loggedIn,(req,res)=>{
     // console.log(req.params);
-    console.log(req.user);
     var data = {
         user: undefined,
         post:undefined,
-        self:false
+        self:undefined,
     };
     User.findOne({
         username: req.params.username        
@@ -23,11 +23,9 @@ route.get('/:username',loggedIn,(req,res)=>{
                 return res.render(("error.html"),{err:"user do not exists !"});
             }
             else{
-                console.log("1:",req.params.username.trim());
-                console.log("2:",req.user.username.trim())
-                if(req.params.username.trim() == req.user.username.trim()){
-                    data.self = true;
-                }
+                // if(req.params.username.trim() == req.user.username.trim()){
+                    data.self = req.user;
+                // }
                 data.user = user;
 
                 Post.find({userId:user._id}).sort({updatedAt: 'desc'})
@@ -53,6 +51,58 @@ route.delete('/post',loggedIn,(req,res)=>{
 
         if(post){
         return res.send("success");
+        }
+    })
+})
+
+route.post('/follow',loggedIn,(req,res)=>{
+    console.log(req.body); // jisko follow kia hai
+    console.log(req.user); // jisne follow kia hai / jo loggedin hai
+    let newDetails = {
+        follwerId: mongoose.Types.ObjectId(req.body._id),
+        username: req.body.username,
+    }
+
+    User.findOneAndUpdate({
+        username: req.user.username,
+    },{
+        $addToSet:{
+            followings:newDetails,
+        }
+    },{
+        new:true,
+    }).exec((err,user)=>{
+
+        if(err){
+            console.log("err in following user",err);
+            return res.render(("error.html"),{err:"err while following user !"});
+        }
+        if(user){
+            // console.log("following success:",user);
+            User.findOneAndUpdate({
+                username: req.body.username,
+            },{
+                $addToSet:{
+                    followers:{
+                        follwerId: mongoose.Types.ObjectId(req.user._id),
+                        username: req.user.username,
+                    }
+                }
+            },{
+                new:true,
+            }).exec((err,user)=>{
+                if(err){
+                    console.log("err while adding followers in user",err);
+                    return res.render(("error.html"),{err:"rror while adding followers in user"});
+                }
+                if(user){
+                    // console.log("follow success",user);
+                    return res.send("success");
+                }
+            })
+        }
+        else{
+            res.send("error");
         }
     })
 })

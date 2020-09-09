@@ -40,6 +40,7 @@ const UserSchema = new mongoose.Schema({
             type:String,
             default:'',
             trim:true,
+            unique:true,
         }
     }],
     followings:[{
@@ -51,6 +52,7 @@ const UserSchema = new mongoose.Schema({
             type: String,
             default: '',
             trim:true,
+            unique: true,
         }
     }]
 })
