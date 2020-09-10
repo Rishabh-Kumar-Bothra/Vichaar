@@ -9,6 +9,12 @@
         .h5{
             cursor: grabbing;
         }
+        .show{
+            display: none;
+        }
+        .error{
+            color:red;
+        }
     </style>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -34,7 +40,7 @@
     <nav class="navbar navbar-light" style="background-color: #D3D3D3;">
             <h1><a href="/" class="navbar-brand" style="color: white"><b><i>VICHAAR</i></b></a></h1>
             <form class="form-inline">
-                <a class="nav-item nav-link" href="#">Home</a>
+                <a class="nav-item nav-link" href="/home">Home</a>
                 <div class="input-group">
                     <div class="input-group-append">
                         <button class="btn btn-outline-primary" type="button" id="logout">
@@ -79,7 +85,27 @@
                             <div class="float-right">
                                 <button class="btn btn-success" type="button" id="follow">Follow</button>
                                 <button class="btn btn-danger" type="button" id="unfollow">Unfollow</button>
-                                <button class="btn btn-primary" type="button" id="edit">Edit</button>
+                                <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#update">Edit</button>
+                            </div>
+                            <!-- Modal -->
+                            <div class="modal fade" id="update" tabindex="-1" role="dialog" aria-labelledby="update" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Update User Details</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <h6 class="error"></h6>
+                                    <input type="text" id="newName" placeholder="Enter new name" />
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" id="edit">Update</button>
+                                    </div>
+                                </div>
+                                </div>
                             </div>
                         </div>
                     </div>

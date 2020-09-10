@@ -104,21 +104,28 @@ $(document).ready(()=>{
     for(x in data){
         $("#appendHere").append(makePosts(data[x].user,data[x].body,data[x].likes,data[x].title,data[x]._id));
     }
+    for(let x in userData.user.followers){
+        $("#followerList").append(makeLists(userData.user.followers[x].username));
+    }
+    for(let x in userData.user.followings){
+        $("#followingList").append(makeLists(userData.user.followings[x].username));
+    }
 
-    $("#followers").click(()=>{
-        $("#followerList").empty();
-        $("#followingList").hide();
-        for(let x in userData.user.followers){
-            $("#followerList").append(makeLists(userData.user.followers[x].username));
-        }
+    // initially hiding list
+    $("#followerList").toggleClass("show");
+    $("#followingList").toggleClass("show");
+
+
+    $("#followers").click(function(){
+        console.log("follow");
+        $("#followerList").toggleClass("show")
+        
     })
 
-    $("#followings").click(()=>{
-        $("#followingList").hide();
-        $("#followerList").empty();
-        for(let x in userData.user.followings){
-            $("#followingList").append(makeLists(userData.user.followings[x].username));
-        }
+    $("#followings").click(function(){
+        console.log("following");
+        $("#followingList").toggleClass("show")
+        
     })
 
     $("#follow").click(()=>{
@@ -139,6 +146,24 @@ $(document).ready(()=>{
             _id:userData.user._id,
         },(data)=>{
             console.log(data);  
+            if(data == "success"){
+                window.location.reload(true);
+            }
+        })
+    })
+
+    $("#edit").click(()=>{
+        let newName = $("#newName").val();
+        console.log("edit clicked!",newName);
+        if(newName == '' || newName == undefined){
+            $(".error").text("input fields can not be empty!");
+            return;
+        }
+        $.post("/profile/update",{
+            name: newName,
+
+        },(data)=>{
+            console.log(data);
             if(data == "success"){
                 window.location.reload(true);
             }

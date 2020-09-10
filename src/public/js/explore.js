@@ -61,45 +61,65 @@ function makePosts(user,body,likes,title,id){
 </div><br>`);
 }
 $(document).ready(()=>{
-    console.log("explore is loaded!");
-    let userData;
-
+    console.log("explore is loaded!",window.location.pathname);
+    var userData;
+    let pathname = window.location.pathname;
     $.get("/user/details",(data)=>{
-        console.log(data);
         userData = data;
+        console.log("userData",userData);
         $("#username").text(data.username);
         $("#name").text(data.name);
         $("#followers").text(data.followers.length);
         $("#followings").text(data.followings.length);
+
+        for(let x in userData.followers){
+            $("#followerList").append(makeLists(userData.followers[x].username));
+        }
+        for(let x in userData.followings){
+            $("#followingList").append(makeLists(userData.followings[x].username));
+        }
+
     })
 
-    $.get("/post/all",(data)=>{
-        // console.log("data: ",data);
-        for(let x in data){
-            $("#appendHere").append(makePosts(data[x].user,data[x].body,data[x].likes,data[x].title,data[x]._id));
-            // console.log(data[x].user,data[x].body,data[x].likes);
-        }
-    })
+    if(pathname == '/'){
+        $.get("/post/all",(data)=>{
+            // console.log("data: ",data);
+            for(let x in data){
+                $("#appendHere").append(makePosts(data[x].user,data[x].body,data[x].likes,data[x].title,data[x]._id));
+                // console.log(data[x].user,data[x].body,data[x].likes);
+            }
+        })
+    }
+    else{
+        $.get("/post/followings",(data)=>{
+            console.log("home",data);
+            for(let x in data){
+                $("#appendHere").append(makePosts(data[x].user,data[x].body,data[x].likes,data[x].title,data[x]._id));
+                // console.log(data[x].user,data[x].body,data[x].likes);
+            }
+        })
+    }
 
     $("#username").click(()=>{
         let username = $("#username").text();
         window.location.href = `/profile/${username}`;
     })
 
-    $("#followers").click(()=>{
-        $("#followerList").empty();
-        $("#followingList").hide();
-        for(let x in userData.followers){
-            $("#followerList").append(makeLists(userData.followers[x].username));
-        }
+    // initially hiding list
+    $("#followerList").toggleClass("show");
+    $("#followingList").toggleClass("show");
+
+
+    $("#followers").click(function(){
+        console.log("follow");
+        $("#followerList").toggleClass("show")
+        
     })
 
-    $("#followings").click(()=>{
-        $("#followingList").hide();
-        $("#followerList").empty();
-        for(let x in userData.followings){
-            $("#followingList").append(makeLists(userData.followings[x].username));
-        }
+    $("#followings").click(function(){
+        console.log("following");
+        $("#followingList").toggleClass("show")
+        
     })
 
     $("#share").click(()=>{

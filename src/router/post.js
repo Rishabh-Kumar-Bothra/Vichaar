@@ -20,6 +20,31 @@ route.get("/all",loggedIn,(req,res)=>{
     })
 })
 
+route.get("/followings",loggedIn,(req,res)=>{
+    User.aggregate([
+        { "$match": { "username": req.user.username }},
+        {
+            $lookup:{
+                from :"Post",
+                localField: "followings",
+                foreignField: "username",
+                as: "Posts_of_following"
+            }
+        }
+    ]).exec((err,posts)=>{
+        if(err){
+            console.log("follow post err",err);
+            return res.render(("error.html",{err:"Error while loading your followers post please login again"}));
+        }
+        if(posts){
+            console.log("posts",posts);
+            return res.send(posts);
+        }
+        res.render(("error.html"),{err:"No posts exists"});
+
+    })
+})
+
 route.post("/likes",loggedIn,(req,res)=>{
     Post.findOneAndUpdate({
         _id: req.body.id,

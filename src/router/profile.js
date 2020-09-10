@@ -70,8 +70,8 @@ route.post('/follow',loggedIn,(req,res)=>{
         username: req.user.username,
     }
 
-    console.log(newFollowingDetails);
-    console.log(newFollowerDetails);
+    // console.log(newFollowingDetails);
+    // console.log(newFollowerDetails);
     User.findOneAndUpdate({
         username: req.user.username,
     },{
@@ -169,7 +169,23 @@ route.post("/unfollow",(req,res)=>{
     })
 })
 
+// update username
+route.post("/update",loggedIn,(req,res)=>{
 
+    User.findOneAndUpdate({username: req.user.username},{
+        $set:{
+            name: req.body.name,
+        }
+    },{new: true})
+    .exec((err,user)=>{
+        if(err){
+            console.log("err while updating name",err);
+            return res.render(("error.html"),{err:"Some error while updating user's name !"});
+        }
+        return res.send("success");
+        
+    })
+})
 
 function loggedIn(req,res,next){
     if(req.isAuthenticated()){
