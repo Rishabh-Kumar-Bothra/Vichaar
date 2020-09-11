@@ -87,7 +87,7 @@ $(document).ready(()=>{
         $("#unfollow").hide();
     }
     else{
-        $("#edit").hide();
+        $("#change").hide();
         let follow = false;
 
         for(x in userData.user.followers){
