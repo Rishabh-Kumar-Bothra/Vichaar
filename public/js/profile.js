@@ -9,11 +9,11 @@ function updateLikes(ele,_id){
     })
 }
 
-function deletePost(_id){
+function deletePost(_id,user){
     $.ajax({
         type:'DELETE',
         url: '/profile/post',
-        data: {id:_id},
+        data: {id:_id,username:user},
         success: function(data){
             if(data == "success"){
                 window.location.reload(true);
@@ -50,7 +50,7 @@ function makePosts(user,body,likes,title,id){
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">
                         <div class="h6 dropdown-header">Configuration</div>
-                        <a class="dropdown-item" href="#" onclick="deletePost('${id}')">Delete</a>
+                        <a class="dropdown-item" href="#" onclick="deletePost('${id,user}')">Delete</a>
                     </div>
                 </div>
             </div>
@@ -112,13 +112,13 @@ $(document).ready(()=>{
     }
 
     // initially hiding list
-    $("#followerList").toggleClass("show");
-    $("#followingList").toggleClass("show");
+    $("#followerList").toggleClass("hidden");
+    $("#followingList").toggleClass("hidden");
 
 
     $("#followers").click(function(){
         console.log("follow");
-        $("#followerList").toggleClass("show")
+        $("#followerList").toggleClass("hidden");
         
     })
 
@@ -166,6 +166,17 @@ $(document).ready(()=>{
             console.log(data);
             if(data == "success"){
                 window.location.reload(true);
+            }
+        })
+    })
+
+    $("#logout").click(()=>{
+        $.get("/login/logout",(data)=>{
+            if(data == "logout"){
+                window.location.href = "/login";
+            }
+            else{
+                alert("LogOut failed!");
             }
         })
     })

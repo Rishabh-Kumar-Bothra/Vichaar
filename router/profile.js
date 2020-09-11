@@ -44,15 +44,20 @@ route.get('/:username',loggedIn,(req,res)=>{
 })
 
 route.delete('/post',loggedIn,(req,res)=>{
-    Post.deleteOne({_id:req.body.id})
-    .exec((err,post)=>{
-        if(err)
-        return res.send(undefined);
+    if(req.user.username == req.body.username){
+        Post.deleteOne({_id:req.body.id})
+        .exec((err,post)=>{
+            if(err)
+            return res.send(undefined);
 
-        if(post){
-        return res.send("success");
-        }
-    })
+            if(post){
+            return res.send("success");
+            }
+        })
+    }
+    else{
+        return res.render(("error.html"),{err:"This is not your profile dude!"});
+    }
 })
 
 
